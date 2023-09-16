@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+group = 'fr.dtn'
+version = '0.0.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.DracoTheNoob:JLL:main-SNAPSHOT'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+}
+
+compileJava.options.encoding = 'utf-8'

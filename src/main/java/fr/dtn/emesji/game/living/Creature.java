@@ -5,10 +5,8 @@ import fr.dtn.emesji.core.engine.*;
 import fr.dtn.emesji.core.io.Json;
 import fr.dtn.emesji.core.math.Vector;
 import fr.dtn.emesji.game.spell.Spell;
-import org.json.simple.JSONArray;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Creature extends AnimatedSprite implements Solid{
@@ -21,6 +19,11 @@ public class Creature extends AnimatedSprite implements Solid{
     private double lastMana;
     protected double speed;
 
+    protected double damageMultiplier;
+    protected double healMultiplier;
+    protected double tankingMultiplier;
+    protected double manaRegenMultiplier;
+
     private final List<Spell> spells;
 
     public Creature(Game game, int layer, Vector vector, int angle, Vector scale, String texture, String name) {
@@ -28,6 +31,11 @@ public class Creature extends AnimatedSprite implements Solid{
 
         this.name = name;
         this.spells = new ArrayList<>();
+
+        this.damageMultiplier = 1;
+        this.healMultiplier = 1;
+        this.tankingMultiplier = 1;
+        this.manaRegenMultiplier = 1;
     }
 
     public void move(Direction direction, double speedMultiplier){
@@ -47,41 +55,40 @@ public class Creature extends AnimatedSprite implements Solid{
         spells.add(spell);
     }
 
-    public int useSpell(Class<? extends Spell> spellClass){
-        for(Spell spell : spells)
-            if(spell.getClass() == spellClass)
-                return spell.execute();
-
-        return 0;
+    public void useSpell(Class<? extends Spell> spellClass){
+        for(Spell spell : spells){
+            if(spell.getClass() == spellClass){
+                spell.execute();
+                return;
+            }
+        }
     }
 
     public void move(Direction direction){ move(direction, 1); }
 
-    @Override public void init() {
+    @Override public void init(){
 
     }
 
     @Override public void tick(){
-        if(health <= 0)
-            game.getScene().remove(getId());
-
         spells.forEach(Spell::tick);
+
+        setMana(Math.min(getMaxMana(), getMana() + getMaxMana() * manaRegenMultiplier / 12000.0));
     }
 
-    @Override public void onAdd(Scene scene) {
+    @Override public void onAdd(Scene scene){}
+    @Override public void onRemove(Scene scene){}
+    @Override public void onCollide(Scene scene, Sprite collided){}
 
+    public void damage(Creature attacker, double damage){
+        this.health = Math.max(health - damage * (1/tankingMultiplier) * attacker.damageMultiplier, 0);
+
+        if(this.health <= 0)
+            kill();
     }
-
-    @Override public void onRemove(Scene scene) {
-
+    public void heal(double heal){
+        this.health = Math.min(health + heal * healMultiplier, getMaxHealth());
     }
-
-    @Override public void onCollide(Scene scene, Sprite collided) {
-
-    }
-
-    public void damage(double damage){ this.health = Math.max(health - damage, 0); }
-    public void heal(double heal){ this.health = Math.min(health + heal, getMaxHealth()); }
 
     public double getMaxHealth() { return maxHealth; }
     public double getHealth() { return health; }
@@ -103,7 +110,17 @@ public class Creature extends AnimatedSprite implements Solid{
         this.mana = mana;
     }
 
+    public void kill(){
+        this.health = 0;
+        game.getScene().remove(getId());
+    }
+
     public Spell[] getSpells(){ return spells.toArray(Spell[]::new); }
+
+    public void addDamageMultiplier(double multiplier){ this.damageMultiplier *= multiplier; }
+    public void addHealMultiplier(double multiplier){ this.healMultiplier *= multiplier; }
+    public void addTankingMultiplier(double multiplier){ this.tankingMultiplier *= multiplier; }
+    public void addManaRegenMultiplier(double multiplier){ this.manaRegenMultiplier *= multiplier; }
 
     public Json toJson(){
         Json json = new Json();

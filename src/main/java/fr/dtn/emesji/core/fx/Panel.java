@@ -16,6 +16,7 @@ import java.util.List;
 
 public class Panel extends JPanel{
     private final Game game;
+    private BufferedImage render;
 
     public Panel(Game game){
         Log.info("Instantiating panel");
@@ -27,7 +28,8 @@ public class Panel extends JPanel{
 
     @Override
     protected void paintComponent(Graphics graphics){
-        Graphics2D g = (Graphics2D) graphics;
+        this.render = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = this.render.createGraphics();
 
         g.setColor(Color.darkGray);
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -90,6 +92,7 @@ public class Panel extends JPanel{
         }
 
         game.getHudManager().draw(g);
+        graphics.drawImage(render, 0, 0, render.getWidth(), render.getHeight(), null);
     }
 
     private Rectangle getCollision(Vector location, BufferedImage texture, Vector scale){
@@ -99,5 +102,9 @@ public class Panel extends JPanel{
         int textureY = (int)location.getY();
 
         return new Rectangle(textureX - textureW/2, textureY - textureH/2, textureW, textureH);
+    }
+
+    public BufferedImage getScreen(){
+        return render.getSubimage(0, 0, render.getWidth(), render.getHeight());
     }
 }

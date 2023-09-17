@@ -3,6 +3,8 @@ package fr.dtn.emesji.core.fx;
 import fr.dtn.emesji.core.Game;
 import fr.dtn.jll.Log;
 
+import java.awt.image.BufferedImage;
+
 public class Window{
     private final Frame frame;
     private final Panel panel;
@@ -43,4 +45,6 @@ public class Window{
     public boolean isVisible(){ return this.frame.isVisible(); }
     public Frame getFrame(){ return frame; }
     public Panel getPanel(){ return panel; }
+
+    public BufferedImage getScreen(){ return panel.getScreen(); }
 }

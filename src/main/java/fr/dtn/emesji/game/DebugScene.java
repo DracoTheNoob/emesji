@@ -25,7 +25,7 @@ public class DebugScene extends Scene{
         super.init();
     }
 
-    @Override public void tick() {
+    @Override public void tick(){
         super.tick();
 
         if(game.getInput().isKey(Key.SPACE)){

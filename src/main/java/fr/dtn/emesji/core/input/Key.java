@@ -1,12 +1,16 @@
 package fr.dtn.emesji.core.input;
 
+import fr.dtn.jll.Log;
+
 public enum Key{
     A(65), Z(90), E(69), R(82), T(84), Y(89), U(85), I(73), O(79), P(80),
     Q(81), S(83), D(68), F(70), G(71), H(72), J(74), K(75), L(76), M(77),
     W(81), X(83), C(68), V(70), B(71), N(72),
     CONTROL(17), SHIFT(16), WINDOWS(524), ALT(18), SPACE(32),
     ONE(49), TWO(50), THREE(51), FOUR(52), FIVE(53),
-    SIX(54), SEVEN(55), EIGHT(56), NINE(57), ZERO(48)
+    SIX(54), SEVEN(55), EIGHT(56), NINE(57), ZERO(48),
+    F1(112),F2(113),F3(114),F4(115),F5(116),F6(117),
+    F7(118),F8(119),F9(120),F10(121),F11(122),F12(123),
     ;
 
     private final int keyCode;

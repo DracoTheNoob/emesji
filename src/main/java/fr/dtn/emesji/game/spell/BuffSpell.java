@@ -6,8 +6,8 @@ import fr.dtn.emesji.game.spell.Spell;
 
 public class BuffSpell extends Spell{
     public BuffSpell(Game game, Creature caster){
-        super(game, caster, 360, 1, "buff", g -> {
-            caster.damage(caster.getHealth()*.5);
+        super(game, caster, 1200, 3, "buff", g -> {
+            caster.addManaRegenMultiplier(10);
             return true;
         });
     }

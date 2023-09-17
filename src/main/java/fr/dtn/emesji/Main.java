@@ -3,6 +3,7 @@ package fr.dtn.emesji;
 import fr.dtn.emesji.core.Game;
 import fr.dtn.emesji.core.io.FileManager;
 import fr.dtn.emesji.game.DebugScene;
+import fr.dtn.emesji.game.GlobalKeyHandler;
 import fr.dtn.jll.Log;
 
 public class Main{
@@ -11,6 +12,7 @@ public class Main{
         Log.setDirectory(fileManager.getFile("log"));
 
         Game game = new Game(fileManager);
+        game.onKey(new GlobalKeyHandler());
         game.setScene(new DebugScene(game));
         game.run();
     }

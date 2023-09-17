@@ -29,12 +29,14 @@ public class Player extends Creature implements Solid{
     private int level;
     private long experience;
 
-    public Player(Game game, Vector vector) {
+    public Player(Game game, Vector vector){
         super(game, LAYER, vector, ANGLE, SCALE, TEXTURE_NAME, "player");
     }
 
 
     @Override public void init(){
+        super.init();
+
         Json staticData = game.getStaticData("player");
 
         if(staticData == null){
@@ -64,14 +66,8 @@ public class Player extends Creature implements Solid{
         game.displayMessage("DED", Long.MAX_VALUE, 50);
     }
 
-    @Override public void onCollide(Scene scene, Sprite collided){
-
-    }
-
     @Override public void tick(){
         super.tick();
-
-        setMana(Math.min(getMaxMana(), getMana() + getMaxMana() / 1200.0));
 
         handleMovement();
         handleSpells();
@@ -116,8 +112,6 @@ public class Player extends Creature implements Solid{
         game.getHudManager().addHudElement(healthBar);
         game.getHudManager().addHudElement(manaBar);
         game.getHudManager().addHudElement(spellBar);
-
-        System.out.println(Arrays.toString(getSpells()));
     }
 
     public Json toJson(){

@@ -127,11 +127,9 @@ public class Game implements Cycle{
 
     @Override public void init() {
         Log.info("Initializing game");
+
         Log.info("Loading textures");
-
-        File textureFolder = fileManager.getFile("texture/");
-        loadTextures(textureFolder);
-
+        loadTextures(fileManager.getFile("texture/"));
         Log.info("Loaded textures");
 
         this.window.show();

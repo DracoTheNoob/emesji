@@ -13,15 +13,15 @@ public class KeyListener implements java.awt.event.KeyListener{
         this.keys = new boolean[526];
     }
 
-    @Override public void keyTyped(java.awt.event.KeyEvent e){
-        KeyEvent event = new KeyEvent(game,
-                Key.fromCode(e.getKeyCode())
-        );
-
-        game.on("key", event);
-    }
-
     @Override public void keyPressed(java.awt.event.KeyEvent e){
+        if(!keys[e.getKeyCode()]){
+            KeyEvent event = new KeyEvent(game,
+                    Key.fromCode(e.getKeyCode())
+            );
+
+            game.on("key", event);
+        }
+
         try{
             this.keys[e.getKeyCode()] = true;
         }catch(IndexOutOfBoundsException e1){
@@ -36,6 +36,8 @@ public class KeyListener implements java.awt.event.KeyListener{
             Log.error("Key not handled in array (len " + keys.length + ") : " + e + "(" + e.getKeyLocation() + ")");
         }
     }
+
+    @Override public void keyTyped(java.awt.event.KeyEvent e){}
 
     public boolean[] getKeys(){ return keys; }
 }

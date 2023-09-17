@@ -20,7 +20,7 @@ public class Spell{
         this.cooldown = cooldown;
         this.currentCooldown = 0;
         this.manaCost = manaCost;
-        this.icon = "spell/" + icon;
+        this.icon = "spell/icon/" + icon;
         this.executor = executor;
     }
 

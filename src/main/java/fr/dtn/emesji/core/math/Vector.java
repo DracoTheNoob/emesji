@@ -29,4 +29,5 @@ public class Vector {
     public void setY(double y) { this.y = y; }
 
     @Override public String toString() { return "(" + x + ";" + y + ")"; }
+    public Vector copy(){ return new Vector(x, y); }
 }

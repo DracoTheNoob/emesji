@@ -11,7 +11,7 @@ import fr.dtn.emesji.game.hud.CreatureHealthBar;
 import java.awt.*;
 
 public class Pig extends Creature implements Solid{
-    private static final int LAYER = 15;
+    private static final int LAYER = 5;
     private static final int ANGLE = 0;
     private static final Vector SCALE = new Vector(.2, .2);
     private static final String TEXTURE_NAME = "creature/pig";

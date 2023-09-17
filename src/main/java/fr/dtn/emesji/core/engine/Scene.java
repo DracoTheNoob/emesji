@@ -13,17 +13,15 @@ import java.util.List;
 public class Scene implements Cycle{
     protected final Game game;
     private final List<Sprite> sprites;
-    private final Map<UUID, Vector> locations;
+    private final List<UUID> initialized;
     private Camera camera;
-
-    private boolean first = true;
 
     public Scene(Game game){
         Log.info("Instantiating scene");
 
         this.game = game;
         this.sprites = new ArrayList<>();
-        this.locations = new HashMap<>();
+        this.initialized = new ArrayList<>();
 
         Log.info("Instantiated scene");
     }
@@ -31,7 +29,12 @@ public class Scene implements Cycle{
     @Override public void init(){
         Log.info("Initializing scene");
 
-        sprites.forEach(Sprite::init);
+        sprites.forEach(sprite -> {
+            if(!initialized.contains(sprite.getId())){
+                sprite.init();
+                initialized.add(sprite.getId());
+            }
+        });
 
         this.camera.init();
 
@@ -82,7 +85,6 @@ public class Scene implements Cycle{
             sprite.setVelocity(new Vector(0, 0));
         }
 
-        sprites.forEach(sprite -> locations.put(sprite.getId(), sprite.getLocation()));
         this.camera.tick();
     }
 
@@ -96,11 +98,13 @@ public class Scene implements Cycle{
     }
 
     public void add(Sprite sprite){
-        sprite.init();
+        if(!initialized.contains(sprite.getId())){
+            sprite.init();
+            initialized.add(sprite.getId());
+        }
         this.sprites.add(sprite);
 
         sprite.onAdd(this);
-        Log.info("Sprite added : " + sprite.getId());
     }
 
     public void remove(UUID id){
@@ -119,7 +123,6 @@ public class Scene implements Cycle{
         sprites.remove(toRemove);
 
         toRemove.onRemove(this);
-        Log.info("Sprite removed : " + id);
     }
 
     public Sprite[] getSprites(){ return sprites.toArray(Sprite[]::new); }

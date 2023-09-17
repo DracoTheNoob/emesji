@@ -6,6 +6,7 @@ import fr.dtn.emesji.core.engine.Solid;
 import fr.dtn.emesji.core.engine.Sprite;
 import fr.dtn.emesji.core.io.Json;
 import fr.dtn.emesji.core.math.Vector;
+import fr.dtn.emesji.game.hud.CreatureHealthBar;
 
 import java.awt.*;
 
@@ -16,9 +17,13 @@ public class Pig extends Creature implements Solid{
     private static final String TEXTURE_NAME = "creature/pig";
 
     private long cooldown = 0;
+    private final CreatureHealthBar healthBar;
 
-    public Pig(Game game, Vector vector) {
+    public Pig(Game game, Vector vector){
         super(game, LAYER, vector, ANGLE, SCALE, TEXTURE_NAME, "player");
+
+        healthBar = new CreatureHealthBar(game, this);
+        game.getHudManager().addHudElement(healthBar);
     }
 
 
@@ -44,7 +49,7 @@ public class Pig extends Creature implements Solid{
     }
 
     @Override public void onRemove(Scene scene){
-
+        game.getHudManager().removeHudElement(healthBar);
     }
 
     @Override

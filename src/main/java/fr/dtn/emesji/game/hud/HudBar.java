@@ -28,7 +28,7 @@ public abstract class HudBar extends FixedHudElement{
         this.splitter = splitter;
     }
 
-    @Override public void init(){};
+    @Override public void init(){}
 
     @Override public abstract void tick();
 

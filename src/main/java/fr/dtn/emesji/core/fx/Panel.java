@@ -3,13 +3,15 @@ package fr.dtn.emesji.core.fx;
 import fr.dtn.emesji.core.Camera;
 import fr.dtn.emesji.core.Game;
 import fr.dtn.emesji.core.engine.Sprite;
+import fr.dtn.emesji.core.math.Vector;
 import fr.dtn.jll.Log;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class Panel extends JPanel{
@@ -33,21 +35,29 @@ public class Panel extends JPanel{
         List<Sprite> sprites = Arrays.asList(game.getScene().getSprites());
         sprites.sort(Comparator.comparingInt(Sprite::getLayer));
 
+        int offsetX = 0;
+        int offsetY = 0;
+
+        Camera camera = game.getScene().getCamera();
+        if(camera != null && camera.getLocation() != null){
+            offsetX = (int)camera.getLocation().getX();
+            offsetY = (int)camera.getLocation().getY();
+        }
+
+        Rectangle window = new Rectangle(offsetX - getWidth()/2, offsetY-getHeight()/2, getWidth(), getHeight());
+
         for(Sprite sprite : sprites){
-            int offsetX = 0;
-            int offsetY = 0;
+            Vector location = sprite.getLocation();
+            BufferedImage texture = game.getTexture(sprite.getTextureName());
+            Vector scale = sprite.getScale();
 
-            Camera camera = game.getScene().getCamera();
-            if(camera.getLocation() != null){
-                offsetX = (int)camera.getLocation().getX();
-                offsetY = (int)camera.getLocation().getY();
-            }
+            if(!getCollision(location, texture, scale).intersects(window))
+                continue;
 
-            BufferedImage image = sprite.getTexture();
-            int width = image.getWidth();
-            int height = image.getHeight();
-            double x = sprite.getLocation().getX();
-            double y = sprite.getLocation().getY();
+            int width = texture.getWidth();
+            int height = texture.getHeight();
+            double x = location.getX();
+            double y = location.getY();
 
             int realWidth = (int)(width * sprite.getScale().getX());
             int realHeight = (int)(height * sprite.getScale().getY());
@@ -59,7 +69,7 @@ public class Panel extends JPanel{
             g.translate(drawX, drawY);
             g.rotate(angle, realWidth / 2.0, realHeight / 2.0);
 
-            g.drawImage(image, 0, 0, realWidth, realHeight, null);
+            g.drawImage(texture, 0, 0, realWidth, realHeight, null);
             g.translate(-drawX, -drawY);
 
             Rectangle collision = sprite.getCollision();
@@ -80,5 +90,14 @@ public class Panel extends JPanel{
         }
 
         game.getHudManager().draw(g);
+    }
+
+    private Rectangle getCollision(Vector location, BufferedImage texture, Vector scale){
+        int textureW = (int)(texture.getWidth() * scale.getX());
+        int textureH = (int)(texture.getHeight() * scale.getY());
+        int textureX = (int)location.getX();
+        int textureY = (int)location.getY();
+
+        return new Rectangle(textureX - textureW/2, textureY - textureH/2, textureW, textureH);
     }
 }

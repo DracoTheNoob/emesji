@@ -10,8 +10,11 @@ import fr.dtn.emesji.core.math.Vector;
 import fr.dtn.emesji.game.hud.player.HudHealthBar;
 import fr.dtn.emesji.game.hud.player.HudManaBar;
 import fr.dtn.emesji.game.hud.player.HudSpellBar;
+import fr.dtn.emesji.game.spell.AttackSpell;
 import fr.dtn.emesji.game.spell.BuffSpell;
 import fr.dtn.emesji.game.spell.HealSpell;
+
+import java.util.Arrays;
 
 public class Player extends Creature implements Solid{
     private static final int LAYER = 10;
@@ -45,9 +48,12 @@ public class Player extends Creature implements Solid{
 
             addSpell(new HealSpell(game, this));
             addSpell(new BuffSpell(game, this));
+            addSpell(new AttackSpell(game, this));
 
             this.speed = 2;
         }
+
+        // TODO : READ STATIC DATA
     }
 
     @Override public void onAdd(Scene scene){
@@ -65,8 +71,7 @@ public class Player extends Creature implements Solid{
     @Override public void tick(){
         super.tick();
 
-        if(game.getCurrentFrame() % 180 == 0)
-            setMana(Math.min(getMaxMana(), getMana() + .1 * getMaxMana()));
+        setMana(Math.min(getMaxMana(), getMana() + getMaxMana() / 1200.0));
 
         handleMovement();
         handleSpells();
@@ -92,9 +97,9 @@ public class Player extends Creature implements Solid{
     }
 
     private void handleSpells(){
-        Key[] keys = { Key.ONE, Key.TWO, Key.THREE, Key.FOUR, Key.FIVE, Key.SIX};
+        Key[] keys = { Key.ONE, Key.TWO, Key.THREE, Key.FOUR, Key.FIVE, Key.SIX };
 
-        for(int i = 0; i < keys.length; i++)
+        for(int i = 0; i < Math.min(keys.length, getSpells().length); i++)
             if(game.getInput().isKey(keys[i]))
                 useSpell(getSpells()[i].getClass());
     }
@@ -111,6 +116,8 @@ public class Player extends Creature implements Solid{
         game.getHudManager().addHudElement(healthBar);
         game.getHudManager().addHudElement(manaBar);
         game.getHudManager().addHudElement(spellBar);
+
+        System.out.println(Arrays.toString(getSpells()));
     }
 
     public Json toJson(){

@@ -27,10 +27,11 @@ public class Spell{
     public int execute(){
         if(caster.getMana() >= manaCost) {
             if(currentCooldown == 0){
-                executor.execute(game);
-                currentCooldown = cooldown;
-                caster.setMana(caster.getMana() - manaCost);
-                return 1;
+                if(executor.execute(game)){
+                    currentCooldown = cooldown;
+                    caster.setMana(caster.getMana() - manaCost);
+                    return 1;
+                }
             }
 
             return -2;

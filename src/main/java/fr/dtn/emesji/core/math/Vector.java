@@ -18,6 +18,10 @@ public class Vector {
         this.y += vector.getY();
     }
 
+    public double distanceFrom(Vector v){
+        return Math.sqrt(Math.pow(v.getX() - x, 2) + Math.pow(v.getY() - y, 2));
+    }
+
     public double getX() { return x; }
     public void setX(double x) { this.x = x; }
 

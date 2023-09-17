@@ -20,13 +20,7 @@ public class DebugScene extends Scene{
 
         this.setCamera(new Camera(game, player.getId(), 1.0));
 
-        this.add(new Block(game, -240, 160, "oak_planks"));
-        this.add(new Block(game, -240, 80, "oak_planks"));
-        this.add(new Block(game, -240, -80, "oak_planks"));
-        this.add(new Block(game, -240, -160, "oak_planks"));
-
-        for(int i = -2; i < 3; i++)
-            this.add(new Pig(game, new Vector(500, i * 100)));
+        this.add(new Pig(game, new Vector(500, 0)));
 
         super.init();
     }

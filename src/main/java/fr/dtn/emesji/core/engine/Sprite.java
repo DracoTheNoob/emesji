@@ -2,9 +2,11 @@ package fr.dtn.emesji.core.engine;
 
 import fr.dtn.emesji.core.Cycle;
 import fr.dtn.emesji.core.Game;
+import fr.dtn.emesji.core.io.Json;
 import fr.dtn.emesji.core.math.Vector;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.UUID;
 
@@ -34,6 +36,20 @@ public abstract class Sprite implements Cycle{
         this.velocity = new Vector(0, 0);
     }
 
+    public Sprite(Game game, Json json){
+        this.game = game;
+
+        this.id = UUID.fromString(json.getString("id"));
+        this.layer = json.getInt("layer");
+        this.location = new Vector(json.getJson("location"));
+        this.angle = json.getInt("angle");
+        this.scale = new Vector(json.getJson("scale"));
+        this.textureName = json.getString("texture");
+        this.texture = game.getTexture(textureName);
+        this.calculateCollision();
+        this.velocity = new Vector(json.getJson("velocity"));
+    }
+
     @Override public abstract void init();
     @Override public void tick(){
         this.calculateCollision();
@@ -59,7 +75,10 @@ public abstract class Sprite implements Cycle{
     public int getAngle(){ return angle; }
     public Vector getScale(){ return scale; }
     public String getTextureName(){ return textureName; }
-    public BufferedImage getTexture(){ return texture; }
+    public BufferedImage getTexture(){
+        this.texture = game.getTexture(textureName);
+        return texture;
+    }
     public void setTexture(String textureName){
         this.textureName = textureName;
         this.texture = game.getTexture(textureName);
@@ -71,4 +90,18 @@ public abstract class Sprite implements Cycle{
     public void setVelocity(Vector velocity){ this.velocity = velocity; }
 
     public Vector getVelocity(){ return velocity; }
+
+    public Json toJson(){
+        Json json = new Json();
+
+        json.set("id", id.toString());
+        json.set("layer", layer);
+        json.set("location", location.toJson());
+        json.set("angle", angle);
+        json.set("scale", scale.toJson());
+        json.set("texture", textureName);
+        json.set("velocity", velocity.toJson());
+
+        return json;
+    }
 }

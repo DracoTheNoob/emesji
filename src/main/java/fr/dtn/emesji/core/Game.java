@@ -23,6 +23,7 @@ public class Game implements Cycle{
 
     private final HashMap<String, Json> staticData;
     private final HashMap<String, BufferedImage> textures;
+    private final HashMap<String, Json> statitics;
 
     private final FileManager fileManager;
     private final Json configuration;
@@ -39,6 +40,7 @@ public class Game implements Cycle{
 
         this.staticData = new HashMap<>();
         this.textures = new HashMap<>();
+        this.statitics = new HashMap<>();
 
         this.fileManager = fileManager;
         this.configuration = new Json(fileManager.getFile("configuration.json"));
@@ -78,6 +80,27 @@ public class Game implements Cycle{
 
         for(File subFile : Objects.requireNonNull(file.listFiles()))
             loadTextures(subFile);
+    }
+
+    private void loadStatistics(File file){
+        if(!file.exists())
+            return;
+
+        if(file.isFile()){
+            String fileName = file.getPath()
+                    .replace(fileManager.getFile("/statistics/").getPath()+"\\", "")
+                    .replace("\\", "/");
+
+            Json statistics = new Json(file);
+            String textureName = fileName.substring(0, fileName.lastIndexOf('.'));
+            this.statitics.put(textureName, statistics);
+
+            Log.info("'"+fileName+"' statistics loaded");
+            return;
+        }
+
+        for(File subFile : Objects.requireNonNull(file.listFiles()))
+            loadStatistics(subFile);
     }
 
     public void run(){
@@ -132,6 +155,10 @@ public class Game implements Cycle{
         loadTextures(fileManager.getFile("texture/"));
         Log.info("Loaded textures");
 
+        Log.info("Loading statistics");
+        loadStatistics(fileManager.getFile("statistics/"));
+        Log.info("Loaded statistics");
+
         this.window.show();
         this.scene.init();
         this.hud.init();
@@ -160,6 +187,7 @@ public class Game implements Cycle{
     public void setStaticData(String key, Json data){ this.staticData.put(key, data); }
     public Json getStaticData(String key){ return this.staticData.get(key); }
     public BufferedImage getTexture(String textureName){ return textures.get(textureName); }
+    public Json getStatistics(String creatureName){ return statitics.get(creatureName); }
 
     public void onKey(EventExecutor<KeyEvent> eventExecutor){ event.onKey(eventExecutor); }
     public void onClick(EventExecutor<ClickEvent> eventExecutor){ event.onClick(eventExecutor); }

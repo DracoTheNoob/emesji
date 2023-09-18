@@ -4,6 +4,7 @@ import fr.dtn.emesji.core.Game;
 import fr.dtn.emesji.core.math.Vector;
 import fr.dtn.emesji.game.hud.HudBar;
 import fr.dtn.emesji.game.living.Player;
+import fr.dtn.emesji.game.living.Statistic;
 
 import java.awt.*;
 
@@ -20,6 +21,6 @@ public class HudHealthBar extends HudBar {
     }
 
     @Override public void tick(){
-        this.setValue(player.getHealth() / player.getMaxHealth());
+        this.setValue(player.getHealth() / player.getStatistics().get(Statistic.HEALTH));
     }
 }

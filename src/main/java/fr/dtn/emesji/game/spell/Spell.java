@@ -3,16 +3,14 @@ package fr.dtn.emesji.game.spell;
 import fr.dtn.emesji.core.Game;
 import fr.dtn.emesji.game.living.Creature;
 
-import java.awt.image.BufferedImage;
-
 public class Spell{
-    private final Game game;
-    private final Creature caster;
-    private final long cooldown;
-    private long currentCooldown;
-    private final double manaCost;
-    private final String icon;
-    private final SpellExecutor executor;
+    protected final Game game;
+    protected final Creature caster;
+    protected final long cooldown;
+    protected long currentCooldown;
+    protected final double manaCost;
+    protected final String icon;
+    protected final SpellExecutor executor;
 
     public Spell(Game game, Creature caster, long cooldown, double manaCost, String icon, SpellExecutor executor){
         this.game = game;
@@ -24,20 +22,11 @@ public class Spell{
         this.executor = executor;
     }
 
-    public int execute(){
-        if(caster.getMana() >= manaCost) {
-            if(currentCooldown == 0){
-                if(executor.execute(game)){
-                    currentCooldown = cooldown;
-                    caster.setMana(caster.getMana() - manaCost);
-                    return 1;
-                }
-            }
-
-            return -2;
+    public void execute(){
+        if(caster.getMana() >= manaCost && currentCooldown == 0 && executor.execute(game)){
+            caster.setMana(caster.getMana() - manaCost);
+            currentCooldown = cooldown;
         }
-
-        return -1;
     }
 
     public void tick(){ currentCooldown = Math.max(currentCooldown-1, 0); }

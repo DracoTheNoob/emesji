@@ -5,6 +5,7 @@ import fr.dtn.emesji.core.engine.Scene;
 import fr.dtn.emesji.core.engine.Sprite;
 import fr.dtn.emesji.core.math.Vector;
 import fr.dtn.emesji.game.living.Creature;
+import fr.dtn.emesji.game.living.StatisticType;
 
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
@@ -51,7 +52,7 @@ public class AttackSpell extends Spell{
                 Ellipse2D ellipse = new Ellipse2D.Double(x, y, width, height);
 
                 if(ellipse.intersects(sprite.getCollision()))
-                    creature.damage(caster, 1);
+                    creature.damage(caster, StatisticType.FIRE, 1);
             }
         }
 

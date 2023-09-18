@@ -1,11 +1,18 @@
 package fr.dtn.emesji.core.math;
 
+import fr.dtn.emesji.core.io.Json;
+
 public class Vector {
     private double x, y;
 
     public Vector(double x, double y){
         this.x = x;
         this.y = y;
+    }
+
+    public Vector(Json json){
+        this.x = json.getDouble("x");
+        this.y = json.getDouble("y");
     }
 
     public void translate(double x, double y){
@@ -30,4 +37,13 @@ public class Vector {
 
     @Override public String toString() { return "(" + x + ";" + y + ")"; }
     public Vector copy(){ return new Vector(x, y); }
+
+    public Json toJson(){
+        Json json = new Json();
+
+        json.set("x", x);
+        json.set("y", y);
+
+        return json;
+    }
 }

@@ -27,7 +27,7 @@ public class HudSpellBar extends FixedHudElement{
     }
 
     @Override public void draw(Graphics2D g){
-        Spell[] spells = player.getSpells();
+        Spell[] spells = player.getSpellBar().getSpells();
 
         for(int i = 0; i < spells.length; i++){
             Spell spell = spells[i];

@@ -5,6 +5,7 @@ import fr.dtn.emesji.core.Game;
 import fr.dtn.emesji.core.fx.Panel;
 import fr.dtn.emesji.core.math.Vector;
 import fr.dtn.emesji.game.living.Creature;
+import fr.dtn.emesji.game.living.Statistic;
 import fr.dtn.jll.Log;
 
 import java.awt.*;
@@ -48,6 +49,6 @@ public class CreatureHealthBar extends HudBar{
         int drawY = (int)(centerY - y + offsetY);
 
         this.location = new Vector(drawX, drawY);
-        this.setValue(target.getHealth() / target.getMaxHealth());
+        this.setValue(target.getHealth() / target.getStatistics().get(Statistic.HEALTH));
     }
 }

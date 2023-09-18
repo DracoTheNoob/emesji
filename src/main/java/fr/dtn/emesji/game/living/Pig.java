@@ -20,32 +20,10 @@ public class Pig extends Creature implements Solid{
     private final CreatureHealthBar healthBar;
 
     public Pig(Game game, Vector vector){
-        super(game, LAYER, vector, ANGLE, SCALE, TEXTURE_NAME, "player");
+        super(game, LAYER, vector, ANGLE, SCALE, TEXTURE_NAME, "player", game.getStatistics("pig"));
 
         healthBar = new CreatureHealthBar(game, this);
         game.getHudManager().addHudElement(healthBar);
-    }
-
-
-    @Override public void init(){
-        Json staticData = game.getStaticData("player");
-
-        if(staticData == null){
-            this.maxHealth = 10.0;
-            this.setHealth(maxHealth);
-            this.setLastHealth(getHealth());
-
-            this.maxMana = 8.0;
-            this.setMana(maxMana);
-            this.setLastMana(getMana());
-
-            this.speed = 2;
-            return;
-        }
-    }
-
-    @Override public void onAdd(Scene scene){
-
     }
 
     @Override public void onRemove(Scene scene){
@@ -65,7 +43,7 @@ public class Pig extends Creature implements Solid{
     @Override public void onCollide(Scene scene, Sprite collided){
         if(collided instanceof Player player && cooldown == 0){
             cooldown = 60;
-            player.setHealth(player.getHealth() - 1);
+            player.damage(this, StatisticType.EARTH, 2);
         }
     }
 

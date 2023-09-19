@@ -1,10 +1,20 @@
 package fr.dtn.emesji.game.living;
 
+import static fr.dtn.emesji.game.living.StatisticType.NEUTRAL;
+import static fr.dtn.emesji.game.living.StatisticType.FIRE;
+import static fr.dtn.emesji.game.living.StatisticType.EARTH;
+import static fr.dtn.emesji.game.living.StatisticType.WATER;
+import static fr.dtn.emesji.game.living.StatisticType.THUNDER;
+import static fr.dtn.emesji.game.living.StatisticType.OFFENSIVE;
+import static fr.dtn.emesji.game.living.StatisticType.DEFENSIVE;
+import static fr.dtn.emesji.game.living.StatisticType.HEAL;
+import static fr.dtn.emesji.game.living.StatisticType.BUFF;
+
 public enum Statistic{
-    HEALTH(StatisticType.NEUTRAL), MANA(StatisticType.NEUTRAL), SPEED(StatisticType.NEUTRAL),
-    FIRE_DEFENSE(StatisticType.FIRE), EARTH_DEFENSE(StatisticType.EARTH), WATER_DEFENSE(StatisticType.WATER), THUNDER_DEFENSE(StatisticType.THUNDER),
-    FIRE_MASTERY(StatisticType.FIRE), EARTH_MASTERY(StatisticType.EARTH), WATER_MASTERY(StatisticType.WATER), THUNDER_MASTERY(StatisticType.THUNDER),
-    OFFENSIVE_MASTERY(StatisticType.OFFENSIVE), DEFENSIVE_MASTERY(StatisticType.DEFENSIVE), HEAL_MASTERY(StatisticType.HEAL), BUFF_MASTERY(StatisticType.BUFF);
+    HEALTH(NEUTRAL), MANA(NEUTRAL), SPEED(NEUTRAL), LUCK(NEUTRAL),
+    FIRE_DEFENSE(FIRE), EARTH_DEFENSE(EARTH), WATER_DEFENSE(WATER), THUNDER_DEFENSE(THUNDER),
+    FIRE_MASTERY(FIRE), EARTH_MASTERY(EARTH), WATER_MASTERY(WATER), THUNDER_MASTERY(THUNDER),
+    OFFENSIVE_MASTERY(OFFENSIVE), DEFENSIVE_MASTERY(DEFENSIVE), HEAL_MASTERY(HEAL), BUFF_MASTERY(BUFF);
 
     private final StatisticType type;
 

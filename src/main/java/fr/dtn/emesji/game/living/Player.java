@@ -9,9 +9,8 @@ import fr.dtn.emesji.core.math.Vector;
 import fr.dtn.emesji.game.hud.player.HudHealthBar;
 import fr.dtn.emesji.game.hud.player.HudManaBar;
 import fr.dtn.emesji.game.hud.player.HudSpellBar;
-import fr.dtn.emesji.game.spell.AttackSpell;
-import fr.dtn.emesji.game.spell.BuffSpell;
-import fr.dtn.emesji.game.spell.HealSpell;
+import fr.dtn.emesji.game.hud.player.HudVarStatsBar;
+import fr.dtn.emesji.game.spell.*;
 import fr.dtn.jll.Log;
 
 public class Player extends Creature implements Solid{
@@ -23,6 +22,7 @@ public class Player extends Creature implements Solid{
     private static HudHealthBar hudHealthBar;
     private static HudManaBar hudManaBar;
     private static HudSpellBar hudSpellBar;
+    private static HudVarStatsBar hudVarStatsBar;
 
     private final SpellBar spellBar;
 
@@ -33,6 +33,8 @@ public class Player extends Creature implements Solid{
         this.spellBar.add(new HealSpell(game, this));
         this.spellBar.add(new BuffSpell(game, this));
         this.spellBar.add(new AttackSpell(game, this));
+        this.spellBar.add(new LuckSpell(game, this));
+        this.spellBar.add(new DashSpell(game, this));
     }
 
 
@@ -81,14 +83,17 @@ public class Player extends Creature implements Solid{
         game.getHudManager().removeHudElement(hudHealthBar);
         game.getHudManager().removeHudElement(hudManaBar);
         game.getHudManager().removeHudElement(hudSpellBar);
+        game.getHudManager().removeHudElement(hudVarStatsBar);
 
         hudHealthBar = new HudHealthBar(game, this);
         hudManaBar = new HudManaBar(game, this);
         hudSpellBar = new HudSpellBar(game, this);
+        hudVarStatsBar = new HudVarStatsBar(game, this);
 
         game.getHudManager().addHudElement(hudHealthBar);
         game.getHudManager().addHudElement(hudManaBar);
         game.getHudManager().addHudElement(hudSpellBar);
+        game.getHudManager().addHudElement(hudVarStatsBar);
     }
 
     public SpellBar getSpellBar(){ return spellBar; }

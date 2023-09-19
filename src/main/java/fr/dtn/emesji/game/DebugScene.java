@@ -16,13 +16,13 @@ public class DebugScene extends Scene{
     }
 
     @Override public void init(){
+        for(int i = - 10; i < 20; i++)
+            this.add(new Pig(game, new Vector(500, i*100)));
+
         Player player = new Player(game, new Vector(0, 0), game.getStatistics("player"));
         this.add(player);
 
         this.setCamera(new Camera(game, player.getId(), 1.0));
-
-        for(int i = - 10; i < 20; i++)
-            this.add(new Pig(game, new Vector(500, i*100)));
 
         super.init();
     }

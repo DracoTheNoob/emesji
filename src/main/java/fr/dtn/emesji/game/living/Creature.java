@@ -8,6 +8,7 @@ import fr.dtn.jll.Log;
 
 public class Creature extends AnimatedSprite implements Solid{
     protected final Statistics statistics;
+    protected final VariableStatistics varStats;
     protected final String name;
     protected final SpellBar spellBar;
 
@@ -20,13 +21,14 @@ public class Creature extends AnimatedSprite implements Solid{
         this.name = name;
         this.spellBar = new SpellBar(game);
         this.statistics = new Statistics(statistics);
+        this.varStats = new VariableStatistics(this);
 
         this.health = this.statistics.get(Statistic.HEALTH);
         this.mana = this.statistics.get(Statistic.MANA);
     }
 
     public void move(Direction direction, double speedMultiplier){
-        double s = statistics.get(Statistic.SPEED);
+        double s = statistics.get(Statistic.SPEED) * (1+varStats.get(Statistic.SPEED)*0.01);
 
         switch(direction){
             case TOP_LEFT -> this.velocity = new Vector(-s * speedMultiplier / Math.sqrt(2), s * speedMultiplier / Math.sqrt(2));
@@ -48,7 +50,8 @@ public class Creature extends AnimatedSprite implements Solid{
         spellBar.tick();
 
         double maxMana = this.statistics.get(Statistic.MANA);
-        this.mana = Math.min(this.mana + maxMana*.01, maxMana);
+        this.mana = Math.min(this.mana + maxMana*(.05/120), maxMana);
+        this.varStats.tick();
     }
 
     @Override public void onAdd(Scene scene){}
@@ -56,15 +59,18 @@ public class Creature extends AnimatedSprite implements Solid{
     @Override public void onCollide(Scene scene, Sprite collided){}
 
     public void damage(Creature damager, StatisticType type, double damage){
-        Log.info("FUCKING CALCULATING DAMAGING MOTHERING FUCKERING");
-        double finalDamage = damage;
+        double finalDamage = damager == null ? damage : critic(damager, damage);
 
         finalDamage *= 1 - 0.01*this.statistics.get(Statistic.getDefense(type));
         finalDamage *= 1 - 0.01*this.statistics.get(Statistic.DEFENSIVE_MASTERY);
+        finalDamage *= 1 - 0.01*this.varStats.get(Statistic.getDefense(type));
+        finalDamage *= 1 - 0.01*this.varStats.get(Statistic.DEFENSIVE_MASTERY);
 
         if(damager != null){
             finalDamage *= 1 + 0.01*damager.statistics.get(Statistic.OFFENSIVE_MASTERY);
             finalDamage *= 1 + 0.01*damager.statistics.get(Statistic.getMastery(type));
+            finalDamage *= 1 + 0.01*damager.varStats.get(Statistic.OFFENSIVE_MASTERY);
+            finalDamage *= 1 + 0.01*damager.varStats.get(Statistic.getMastery(type));
         }
 
         this.health = Math.max(this.health - finalDamage, 0);
@@ -74,14 +80,23 @@ public class Creature extends AnimatedSprite implements Solid{
     }
 
     public void heal(Creature healer, StatisticType type, double heal){
-        double finalHeal = heal;
+        double finalHeal = healer == null ? heal : critic(healer, heal);
 
         if(healer != null){
             finalHeal *= 1 + 0.01 * healer.statistics.get(Statistic.HEAL_MASTERY);
             finalHeal *= 1 + 0.01 * healer.statistics.get(Statistic.getMastery(type));
+            finalHeal *= 1 + 0.01 * healer.varStats.get(Statistic.HEAL_MASTERY);
+            finalHeal *= 1 + 0.01 * healer.varStats.get(Statistic.getMastery(type));
         }
 
         this.health = Math.min(this.health + finalHeal, this.statistics.get(Statistic.HEALTH));
+    }
+
+    public double critic(Creature user, double value){
+        double luck = user.getStatistics().get(Statistic.LUCK)*0.01;
+        luck += user.getVarStats().get(Statistic.LUCK)*0.01;
+        boolean critic = Math.random() < luck;
+        return value * (critic ? 1.5 : 1);
     }
 
     public void kill(){
@@ -90,6 +105,7 @@ public class Creature extends AnimatedSprite implements Solid{
     }
 
     public Statistics getStatistics(){ return statistics; }
+    public VariableStatistics getVarStats(){ return varStats; }
     public String getName(){ return name; }
     public SpellBar getSpellBar(){ return spellBar; }
 

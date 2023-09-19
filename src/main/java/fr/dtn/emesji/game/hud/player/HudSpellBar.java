@@ -37,8 +37,9 @@ public class HudSpellBar extends FixedHudElement{
 
             g.drawImage(game.getTexture(spell.getIcon()), drawX, drawY, box, box, null);
 
+            int offset = (int)(box * spell.getCurrentCooldown() / spell.getCooldown());
             g.setColor(new Color(255, 255, 255, 100));
-            g.fillRect(drawX, drawY, box, (int)(box * spell.getCurrentCooldown() / spell.getCooldown()));
+            g.fillRect(drawX, drawY+box-offset, box, offset);
         }
     }
 }

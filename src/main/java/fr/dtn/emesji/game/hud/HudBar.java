@@ -34,7 +34,7 @@ public abstract class HudBar extends FixedHudElement{
 
     @Override public final void draw(Graphics2D g) {
         g.setColor(border);
-        g.fillRect((int)(location.getX() - 3), (int)(location.getY() - 3), width + 6, height + 6);
+        g.fillRect((int)(location.getX() - 2), (int)(location.getY() - 2), width + 4, height + 4);
 
         g.setColor(background);
         g.fillRect((int)location.getX(), (int)location.getY(), width, height);

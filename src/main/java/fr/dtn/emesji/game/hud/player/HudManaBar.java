@@ -2,9 +2,9 @@ package fr.dtn.emesji.game.hud.player;
 
 import fr.dtn.emesji.core.Game;
 import fr.dtn.emesji.core.math.Vector;
-import fr.dtn.emesji.game.hud.HudBar;
-import fr.dtn.emesji.game.living.Player;
-import fr.dtn.emesji.game.living.Statistic;
+import fr.dtn.emesji.game.hud.preset.HudBar;
+import fr.dtn.emesji.game.living.creature.player.Player;
+import fr.dtn.emesji.game.living.statistics.Statistic;
 
 import java.awt.*;
 

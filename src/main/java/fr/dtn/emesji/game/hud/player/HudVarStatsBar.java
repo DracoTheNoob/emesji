@@ -1,16 +1,20 @@
 package fr.dtn.emesji.game.hud.player;
 
 import fr.dtn.emesji.core.Game;
-import fr.dtn.emesji.core.fx.hud.FixedHudElement;
+import fr.dtn.emesji.core.fx.hud.LocatedHudElement;
 import fr.dtn.emesji.core.math.Vector;
-import fr.dtn.emesji.game.living.Player;
-import fr.dtn.emesji.game.living.VariableStatistic;
+import fr.dtn.emesji.game.living.creature.player.Player;
+import fr.dtn.emesji.game.living.statistics.Statistic;
+import fr.dtn.emesji.game.living.statistics.VariableStatistic;
+import fr.dtn.emesji.game.living.statistics.VariableStatistics;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
-public class HudVarStatsBar extends FixedHudElement{
-    private final int box = 40;
+public class HudVarStatsBar extends LocatedHudElement {
+    private final static int box = 30;
     private final Player player;
 
     public HudVarStatsBar(Game game, Player player){
@@ -27,6 +31,9 @@ public class HudVarStatsBar extends FixedHudElement{
     @Override public void draw(Graphics2D g){
         VariableStatistic[] stats = player.getVarStats().getAll();
 
+        Font font = new Font("Javanese", Font.PLAIN, (int)(box*.8));
+        g.setFont(font);
+
         for(int i = 0; i < stats.length; i++){
             VariableStatistic stat = stats[i];
 
@@ -40,6 +47,9 @@ public class HudVarStatsBar extends FixedHudElement{
             int offset = (int)(box * stat.getDelay() / stat.getBaseDelay());
             g.setColor(new Color(255, 255, 255, 100));
             g.fillRect(drawX, drawY+box-offset, box, offset);
+
+            String text = String.valueOf((int)((double)stat.getDelay()/game.getFps()*10)/10.0);
+            g.drawString(text, drawX+box+10, drawY+box - (int)(box*.2));
         }
     }
 }

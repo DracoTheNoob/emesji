@@ -6,11 +6,10 @@ import fr.dtn.jll.Log;
 
 public class KeyListener implements java.awt.event.KeyListener{
     private final Game game;
-    private final boolean[] keys;
+    private static final boolean[] keys = new boolean[526];
 
     public KeyListener(Game game){
         this.game = game;
-        this.keys = new boolean[526];
     }
 
     @Override public void keyPressed(java.awt.event.KeyEvent e){
@@ -23,7 +22,7 @@ public class KeyListener implements java.awt.event.KeyListener{
         }
 
         try{
-            this.keys[e.getKeyCode()] = true;
+            keys[e.getKeyCode()] = true;
         }catch(IndexOutOfBoundsException e1){
             Log.error("Key not handled in array (len " + keys.length + ") : " + e + "(" + e.getKeyLocation() + ")");
         }
@@ -31,7 +30,7 @@ public class KeyListener implements java.awt.event.KeyListener{
 
     @Override public void keyReleased(java.awt.event.KeyEvent e){
         try{
-            this.keys[e.getKeyCode()] = false;
+            keys[e.getKeyCode()] = false;
         }catch(IndexOutOfBoundsException e1){
             Log.error("Key not handled in array (len " + keys.length + ") : " + e + "(" + e.getKeyLocation() + ")");
         }

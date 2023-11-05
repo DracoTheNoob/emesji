@@ -35,7 +35,7 @@ public class Json {
         Log.info("'" + file.getPath() + "' loaded");
     }
 
-    private Json(JSONObject object){
+    public Json(JSONObject object){
         this.file = null;
         this.json = object;
     }

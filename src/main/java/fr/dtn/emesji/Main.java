@@ -2,8 +2,8 @@ package fr.dtn.emesji;
 
 import fr.dtn.emesji.core.Game;
 import fr.dtn.emesji.core.io.FileManager;
-import fr.dtn.emesji.game.DebugScene;
-import fr.dtn.emesji.game.GlobalKeyHandler;
+import fr.dtn.emesji.game.global.DebugScene;
+import fr.dtn.emesji.game.global.GlobalKeyHandler;
 import fr.dtn.jll.Log;
 
 public class Main{

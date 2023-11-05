@@ -7,7 +7,8 @@ import fr.dtn.emesji.core.fx.hud.HudManager;
 import fr.dtn.emesji.core.input.InputManager;
 import fr.dtn.emesji.core.io.Json;
 import fr.dtn.emesji.core.io.FileManager;
-import fr.dtn.emesji.game.hud.HudMessage;
+import fr.dtn.emesji.game.hud.preset.HudMessage;
+import fr.dtn.emesji.game.living.creature.inventory.Item;
 import fr.dtn.jll.Log;
 
 import javax.imageio.ImageIO;
@@ -23,13 +24,13 @@ public class Game implements Cycle{
 
     private final HashMap<String, Json> staticData;
     private final HashMap<String, BufferedImage> textures;
-    private final HashMap<String, Json> statitics;
+    private final HashMap<String, Json> statistics;
+    private final HashMap<String, Item> items;
 
     private final FileManager fileManager;
     private final Json configuration;
     private final Window window;
     private final InputManager input;
-    private Camera camera;
     private Scene scene;
     private final HudManager hud;
     private final HudMessage hudMessage;
@@ -40,7 +41,7 @@ public class Game implements Cycle{
 
         this.staticData = new HashMap<>();
         this.textures = new HashMap<>();
-        this.statitics = new HashMap<>();
+        this.statistics = new HashMap<>();
 
         this.fileManager = fileManager;
         this.configuration = new Json(fileManager.getFile("configuration.json"));
@@ -48,10 +49,11 @@ public class Game implements Cycle{
         this.input = new InputManager(this, window.getFrame());
         this.scene = new Scene(this);
         this.fpsLimit = configuration.getInt("window.fps", 120);
-        this.hud = new HudManager();
+        this.hud = new HudManager(this);
         this.hudMessage = new HudMessage(this, window.getPanel());
         this.hud.addHudElement(hudMessage);
         this.event = new EventManager();
+        this.items = new HashMap<>();
 
         Log.info("Instantiated game");
     }
@@ -93,7 +95,7 @@ public class Game implements Cycle{
 
             Json statistics = new Json(file);
             String textureName = fileName.substring(0, fileName.lastIndexOf('.'));
-            this.statitics.put(textureName, statistics);
+            this.statistics.put(textureName, statistics);
 
             Log.info("'"+fileName+"' statistics loaded");
             return;
@@ -101,6 +103,27 @@ public class Game implements Cycle{
 
         for(File subFile : Objects.requireNonNull(file.listFiles()))
             loadStatistics(subFile);
+    }
+
+    private void loadItems(File file){
+        if(!file.exists())
+            return;
+
+        if(file.isFile()){
+            String fileName = file.getPath()
+                    .replace(fileManager.getFile("/items/").getPath()+"\\", "")
+                    .replace("\\", "/");
+
+            Json item = new Json(file);
+            String itemName = fileName.substring(0, fileName.lastIndexOf('.'));
+            this.items.put(itemName, new Item(item));
+
+            Log.info("'"+fileName+"' item loaded");
+            return;
+        }
+
+        for(File subFile : Objects.requireNonNull(file.listFiles()))
+            loadItems(subFile);
     }
 
     public void run(){
@@ -159,6 +182,10 @@ public class Game implements Cycle{
         loadStatistics(fileManager.getFile("statistics/"));
         Log.info("Loaded statistics");
 
+        Log.info("Loading items");
+        loadItems(fileManager.getFile("items/"));
+        Log.info("Loaded items");
+
         this.window.show();
         this.scene.init();
         this.hud.init();
@@ -187,9 +214,11 @@ public class Game implements Cycle{
     public void setStaticData(String key, Json data){ this.staticData.put(key, data); }
     public Json getStaticData(String key){ return this.staticData.get(key); }
     public BufferedImage getTexture(String textureName){ return textures.get(textureName); }
-    public Json getStatistics(String creatureName){ return statitics.get(creatureName); }
+    public Json getStatistics(String creatureName){ return statistics.get(creatureName); }
+    public Item getItem(String itemName){ return items.get(itemName); }
 
     public void onKey(EventExecutor<KeyEvent> eventExecutor){ event.onKey(eventExecutor); }
     public void onClick(EventExecutor<ClickEvent> eventExecutor){ event.onClick(eventExecutor); }
+    public void onDrag(EventExecutor<DragEvent> eventExecutor){ event.onDrag(eventExecutor); }
     public void on(String eventName, Event event){ this.event.on(eventName, event); }
 }
